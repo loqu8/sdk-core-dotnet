@@ -10,7 +10,7 @@ namespace PayPal.UnitTest
     class OpenIdTest
     {
         [Ignore]
-        public void testGetAuthUrl()
+        public async void testGetAuthUrlAsync()
         {
             Dictionary<String, String> configurationMap = new Dictionary<string, string>();
             configurationMap.Add("ClientID", "dummy");
@@ -29,10 +29,10 @@ namespace PayPal.UnitTest
 
             // code you will get back as part of the url after redirection
            param.setCode("wm7qvCMoGwMbtuytIQPhpGn9Gac7nmwVraQIgNp9uQIovP5c-wGn8oB0LmUnhlhse4at4T8XGwXufb7D94YWgIsZpBSzXMwdFkxp4u2oH9dy3HW4");
-           Tokeninfo info = Tokeninfo.CreateFromAuthorizationCode(apiContext, param);
+           Tokeninfo info = await Tokeninfo.CreateFromAuthorizationCodeAsync(apiContext, param);
            UserinfoParameters userinfoParams = new UserinfoParameters();
            userinfoParams.setAccessToken(info.access_token);
-           Userinfo userinfo = Userinfo.GetUserinfo(apiContext, userinfoParams);
+           Userinfo userinfo = await Userinfo.GetUserinfoAsync(apiContext, userinfoParams);
 
 
 

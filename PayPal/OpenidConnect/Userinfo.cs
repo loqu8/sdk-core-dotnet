@@ -3,6 +3,7 @@ using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;
 using PayPal;
 using PayPal.Util;
+using System.Threading.Tasks;
 
 namespace PayPal.OpenidConnect
 {
@@ -345,13 +346,13 @@ namespace PayPal.OpenidConnect
 	/// Returns user details
 	/// <param name="userinfoParameters">Query parameters used for API call</param>
 	/// </summary>
-	public static Userinfo GetUserinfo(UserinfoParameters userinfoParameters)
+	public static async Task<Userinfo> GetUserinfoAsync(UserinfoParameters userinfoParameters)
 	{
 		string pattern = "v1/identity/openidconnect/userinfo?schema={0}&access_token={1}";
 		object[] parameters = new object[] { userinfoParameters };
 		string resourcePath = SDKUtil.FormatURIPath(pattern, parameters);
 		string payLoad = "";
-		return PayPalResource.ConfigureAndExecute<Userinfo>(null, HttpMethod.GET,
+		return await PayPalResource.ConfigureAndExecuteAsync<Userinfo>(null, HttpMethod.GET,
 				resourcePath, null, payLoad);
 	}
 
@@ -360,13 +361,13 @@ namespace PayPal.OpenidConnect
 	/// <param name="apiContext">APIContext to be used for the call.</param>
 	/// <param name="userinfoParameters">Query parameters used for API call</param>
 	/// </summary>
-	public static Userinfo GetUserinfo(APIContext apiContext, UserinfoParameters userinfoParameters)
+	public static async Task<Userinfo> GetUserinfoAsync(APIContext apiContext, UserinfoParameters userinfoParameters)
 	{
 		string pattern = "v1/identity/openidconnect/userinfo?schema={0}&access_token={1}";
 		object[] parameters = new object[] { userinfoParameters };
 		string resourcePath = SDKUtil.FormatURIPath(pattern, parameters);
 		string payLoad = "";
-		return PayPalResource.ConfigureAndExecute<Userinfo>(apiContext,
+		return await PayPalResource.ConfigureAndExecuteAsync<Userinfo>(apiContext,
 				HttpMethod.GET, resourcePath, null, payLoad);
 	}
 	}

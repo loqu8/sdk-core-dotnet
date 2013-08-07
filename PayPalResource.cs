@@ -15,6 +15,7 @@ using PayPal.Exception;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using PayPal.Manager;
+using System.Threading.Tasks;
 
 namespace PayPal
 {
@@ -36,18 +37,18 @@ namespace PayPal
 
         public const string SdkVersion = "0.7.3";
 
-        public static T ConfigureAndExecute<T>(string accessToken, HttpMethod httpMethod, string resource, string payLoad)
+        public static async Task<T> ConfigureAndExecuteAsync<T>(string accessToken, HttpMethod httpMethod, string resource, string payLoad)
         {
             APIContext apiContext = new APIContext(accessToken);
-            return ConfigureAndExecute<T>(apiContext, httpMethod, resource, null, payLoad);
+            return await ConfigureAndExecuteAsync<T>(apiContext, httpMethod, resource, null, payLoad);
         }
 
-        public static T ConfigureAndExecute<T>(APIContext apiContext, HttpMethod httpMethod, string resource, string payLoad)
+        public static async Task<T> ConfigureAndExecuteAsync<T>(APIContext apiContext, HttpMethod httpMethod, string resource, string payLoad)
         {
-            return ConfigureAndExecute<T>(apiContext, httpMethod, resource, null, payLoad);
+            return await ConfigureAndExecuteAsync<T>(apiContext, httpMethod, resource, null, payLoad);
         }
 
-        public static T ConfigureAndExecute<T>(APIContext apiContext, HttpMethod httpMethod, string resource, Dictionary<string, string> headersMap, string payLoad)
+        public static async Task<T> ConfigureAndExecuteAsync<T>(APIContext apiContext, HttpMethod httpMethod, string resource, Dictionary<string, string> headersMap, string payLoad)
         {
             try
             {
@@ -104,7 +105,7 @@ namespace PayPal
                     }
                 }
                 HttpConnection connectionHttp = new HttpConnection(config);
-                response = connectionHttp.Execute(payLoad, httpRequest);
+                response = await connectionHttp.ExecuteAsync(payLoad, httpRequest);
                 if (typeof(T).Name.Equals("Object"))
                 {
                     return default(T);

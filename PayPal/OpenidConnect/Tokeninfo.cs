@@ -4,6 +4,7 @@ using System.Web;
 using System.Collections.Generic;
 using PayPal;
 using PayPal.Util;
+using System.Threading.Tasks;
 
 namespace PayPal.OpenidConnect
 {
@@ -117,7 +118,7 @@ namespace PayPal.OpenidConnect
 	/// Creates an Access Token from an Authorization Code.
 	/// <param name="createFromAuthorizationCodeParameters">Query parameters used for API call</param>
 	/// </summary>
-	public static Tokeninfo CreateFromAuthorizationCode(CreateFromAuthorizationCodeParameters createFromAuthorizationCodeParameters)
+	public static async Task<Tokeninfo> CreateFromAuthorizationCodeAsync(CreateFromAuthorizationCodeParameters createFromAuthorizationCodeParameters)
 	{
 		string pattern = "v1/identity/openidconnect/tokenservice ?grant_type={0}&code={1}&redirect_uri={2}";
 		object[] parameters = new object[] { createFromAuthorizationCodeParameters };
@@ -126,7 +127,7 @@ namespace PayPal.OpenidConnect
 		resourcePath = resourcePath.Substring(0, resourcePath.IndexOf("?"));
 		Dictionary<string, string> headersMap = new Dictionary<string, string>();
 		headersMap.Add("Content-Type", "application/x-www-form-urlencoded");
-		return PayPalResource.ConfigureAndExecute<Tokeninfo>(null, HttpMethod.POST,
+		return await PayPalResource.ConfigureAndExecuteAsync<Tokeninfo>(null, HttpMethod.POST,
 				resourcePath, headersMap, payLoad);
 	}
 
@@ -135,7 +136,7 @@ namespace PayPal.OpenidConnect
 	/// <param name="apiContext">APIContext to be used for the call.</param>
 	/// <param name="createFromAuthorizationCodeParameters">Query parameters used for API call</param>
 	/// </summary>
-	public static Tokeninfo CreateFromAuthorizationCode(APIContext apiContext, CreateFromAuthorizationCodeParameters createFromAuthorizationCodeParameters)
+	public static async Task<Tokeninfo> CreateFromAuthorizationCodeAsync(APIContext apiContext, CreateFromAuthorizationCodeParameters createFromAuthorizationCodeParameters)
 	{
 		string pattern = "v1/identity/openidconnect/tokenservice ?grant_type={0}&code={1}&redirect_uri={2}";
 		object[] parameters = new object[] { createFromAuthorizationCodeParameters };
@@ -144,7 +145,7 @@ namespace PayPal.OpenidConnect
 		resourcePath = resourcePath.Substring(0, resourcePath.IndexOf("?"));
 		Dictionary<string, string> headersMap = new Dictionary<string, string>();
 		headersMap.Add("Content-Type", "application/x-www-form-urlencoded");
-		return PayPalResource.ConfigureAndExecute<Tokeninfo>(apiContext, HttpMethod.POST,
+		return await PayPalResource.ConfigureAndExecuteAsync<Tokeninfo>(apiContext, HttpMethod.POST,
 				resourcePath, headersMap, payLoad);
 	}
 
@@ -152,7 +153,7 @@ namespace PayPal.OpenidConnect
 	/// Creates an Access Token from an Refresh Token.
 	/// <param name="createFromRefreshTokenParameters">Query parameters used for API call</param>
 	/// </summary>
-	public Tokeninfo CreateFromRefreshToken(CreateFromRefreshTokenParameters createFromRefreshTokenParameters)
+	public async Task<Tokeninfo> CreateFromRefreshTokenAsync(CreateFromRefreshTokenParameters createFromRefreshTokenParameters)
 	{
 		string pattern = "v1/identity/openidconnect/tokenservice ?grant_type={0}&refresh_token={1}&scope={2}&client_id={3}&client_secret={4}";
 		createFromRefreshTokenParameters.setRefreshToken(HttpUtility.UrlEncode(refresh_token));
@@ -162,7 +163,7 @@ namespace PayPal.OpenidConnect
 		resourcePath = resourcePath.Substring(0, resourcePath.IndexOf("?"));
 		Dictionary<string, string> headersMap = new Dictionary<string, string>();
 		headersMap.Add("Content-Type", "application/x-www-form-urlencoded");
-		return PayPalResource.ConfigureAndExecute<Tokeninfo>(null, HttpMethod.POST,
+		return await PayPalResource.ConfigureAndExecuteAsync<Tokeninfo>(null, HttpMethod.POST,
 				resourcePath, headersMap, payLoad);
 	}
 
@@ -171,7 +172,7 @@ namespace PayPal.OpenidConnect
 	/// <param name="apiContext">APIContext to be used for the call</param>
 	/// <param name="createFromRefreshTokenParameters">Query parameters used for API call</param>
 	/// </summary>
-	public Tokeninfo CreateFromRefreshToken(APIContext apiContext, CreateFromRefreshTokenParameters createFromRefreshTokenParameters)
+	public async Task<Tokeninfo> CreateFromRefreshTokenAsync(APIContext apiContext, CreateFromRefreshTokenParameters createFromRefreshTokenParameters)
 	{
 		string pattern = "v1/identity/openidconnect/tokenservice ?grant_type={0}&refresh_token={1}&scope={2}&client_id={3}&client_secret={4}";
 		createFromRefreshTokenParameters.setRefreshToken(HttpUtility.UrlEncode(refresh_token));
@@ -181,7 +182,7 @@ namespace PayPal.OpenidConnect
 		resourcePath = resourcePath.Substring(0, resourcePath.IndexOf("?"));
 		Dictionary<string, string> headersMap = new Dictionary<string, string>();
 		headersMap.Add("Content-Type", "application/x-www-form-urlencoded");
-		return PayPalResource.ConfigureAndExecute<Tokeninfo>(apiContext,
+		return await PayPalResource.ConfigureAndExecuteAsync<Tokeninfo>(apiContext,
 				HttpMethod.POST, resourcePath, headersMap, payLoad);
 	}
 	}

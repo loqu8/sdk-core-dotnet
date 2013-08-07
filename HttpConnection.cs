@@ -11,6 +11,7 @@ using System.Net.Security;
 using log4net;
 using PayPal.Exception;
 using PayPal.Manager;
+using System.Threading.Tasks;
 
 namespace PayPal
 {
@@ -38,7 +39,7 @@ namespace PayPal
             this.config = config;
         }
 
-        public string Execute(string payLoad, HttpWebRequest httpRequest)
+        public async Task<string> ExecuteAsync(string payLoad, HttpWebRequest httpRequest)
         {
             try
             {
@@ -47,12 +48,12 @@ namespace PayPal
                     switch (httpRequest.Method)
                     {
                         case "POST":
-                            using (StreamWriter writerStream = new StreamWriter(httpRequest.GetRequestStream()))
+                            using (StreamWriter writerStream = new StreamWriter(await httpRequest.GetRequestStreamAsync()))
                             {
                                 if (!string.IsNullOrEmpty(payLoad))
                                 {
-                                    writerStream.Write(payLoad);
-                                    writerStream.Flush();
+                                    await writerStream.WriteAsync(payLoad);
+                                    await writerStream.FlushAsync();
                                     writerStream.Close();
                                     logger.Debug(payLoad);
                                 }
@@ -72,11 +73,12 @@ namespace PayPal
                 {
                     try
                     {
-                        using (WebResponse responseWeb = httpRequest.GetResponse())
+                        using (WebResponse responseWeb = await httpRequest.GetResponseAsync())
                         {
                             using (StreamReader readerStream = new StreamReader(responseWeb.GetResponseStream()))
                             {
-                                string response = readerStream.ReadToEnd().Trim();
+                                string response = await readerStream.ReadToEndAsync();
+                                response = response.Trim();
                                 logger.Debug("Service response");
                                 logger.Debug(response);
                                 return response;

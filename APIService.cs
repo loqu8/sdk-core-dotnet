@@ -8,6 +8,7 @@ using log4net;
 using PayPal.Manager;
 using PayPal.Exception;
 using PayPal.Authentication;
+using System.Threading.Tasks;
 
 namespace PayPal
 {
@@ -49,7 +50,7 @@ namespace PayPal
         /// </summary>
         /// <param name="apiCallHandler"></param>
         /// <returns></returns>
-        public string MakeRequestUsing(IAPICallPreHandler apiCallHandler)
+        public async Task<string> MakeRequestUsingAsync(IAPICallPreHandler apiCallHandler)
         {
             string responseString = string.Empty;
             string uri = apiCallHandler.GetEndPoint();
@@ -104,11 +105,11 @@ namespace PayPal
                 try
                 {
                     // Calling the plaftform API web service and getting the response
-                    using (WebResponse response = httpRequest.GetResponse())
+                    using (WebResponse response = await httpRequest.GetResponseAsync())
                     {
                         using (StreamReader sr = new StreamReader(response.GetResponseStream()))
                         {
-                            responseString = sr.ReadToEnd();
+                            responseString = await sr.ReadToEndAsync();
                             logger.Debug("Service response");
                             logger.Debug(responseString);
                             return responseString;

@@ -15,6 +15,7 @@ using PayPal.Manager;
 // net35
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace PayPal
 {
@@ -86,7 +87,7 @@ namespace PayPal
             this.config = config != null ? ConfigManager.getConfigWithDefaults(config): ConfigManager.getConfigWithDefaults(ConfigManager.Instance.GetProperties());
         }
 
-        public string GetAccessToken()
+        public async Task<string> GetAccessTokenAsync()
         {
             // If Access Token is not Null and time has lapsed
             if (accessToken != null)
@@ -106,16 +107,16 @@ namespace PayPal
                 // Write Logic for passing in Detail to Identity Api Serv and
                 // computing the token
                 // Set the Value inside the accessToken and result
-                accessToken = GenerateAccessToken();
+                accessToken = await GenerateAccessTokenAsync();
             }
             return accessToken;
         }
 
-        private string GenerateAccessToken()
+        private async Task<string> GenerateAccessTokenAsync()
         {
             string generatedToken = null;
             string base64ClientID = GenerateBase64String(clientID + ":" + clientSecret);
-            generatedToken = GenerateOAuthToken(base64ClientID);
+            generatedToken = await GenerateOAuthTokenAsync(base64ClientID);
             return generatedToken;
         }
 
@@ -133,7 +134,7 @@ namespace PayPal
             }           
         }
 
-        private string GenerateOAuthToken(string base64ClientID)
+        private async Task<string> GenerateOAuthTokenAsync(string base64ClientID)
         { 
             
                 string response = null;
@@ -182,7 +183,7 @@ namespace PayPal
                 }
 
                 HttpConnection httpConnection = new HttpConnection(config);
-                response = httpConnection.Execute(postRequest, httpRequest);
+                response = await httpConnection.ExecuteAsync(postRequest, httpRequest);
                 JObject deserializedObject = (JObject)JsonConvert.DeserializeObject(response);
                 string generatedToken = (string)deserializedObject["token_type"] + " " + (string)deserializedObject["access_token"];
                 appID = (string)deserializedObject["app_id"];
